@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>山本渉の1,832km 珍道中ダッシュボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6efe1; --ink:#2b2420; --sub:#7a6d60; --line:#d9ccb4; --card:#fffaf0;
+  --tokai:#2f7fb8; --naka:#3f8f5a; --koshu:#8a4fa3; --nikko:#d49a1f; --oshu:#c4502f;
+  --accent:#e0452b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"Zen Maru Gothic",system-ui,sans-serif;line-height:1.6}
+body{background-image:radial-gradient(rgba(120,90,50,.07) 1px,transparent 1px);background-size:14px 14px}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+h1,h2,.big{font-family:"Dela Gothic One",sans-serif;font-weight:400;letter-spacing:.02em}
+h2{font-size:26px;margin:64px 0 6px;display:flex;align-items:center;gap:10px}
+h2 .no{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:16px}
+.lead{color:var(--sub);margin:0 0 18px}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:18px}
+/* hero */
+.hero{text-align:center;padding:34px 10px 10px}
+.stamp{display:inline-block;border:3px solid var(--accent);color:var(--accent);padding:4px 14px;border-radius:8px;transform:rotate(-4deg);font-weight:900;letter-spacing:.1em;margin-bottom:10px}
+.hero h1{font-size:clamp(34px,6.4vw,66px);line-height:1.15;margin:6px 0 8px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .period{color:var(--sub);font-weight:700}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+.kpi{text-align:center;padding:16px 8px}
+.kpi .big{font-size:clamp(26px,4vw,40px);line-height:1.1}
+.kpi .u{font-size:15px;margin-left:2px}
+.kpi .lbl{font-size:13px;color:var(--sub);font-weight:700}
+.conv{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.conv .card{padding:14px;display:flex;gap:12px;align-items:center;box-shadow:3px 3px 0 var(--ink)}
+.conv .ico{font-size:34px;line-height:1}
+.conv b{font-size:20px}
+.conv small{display:block;color:var(--sub);font-size:12px;line-height:1.4}
+/* kaido cards */
+.kaidos{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.kd{padding:14px 14px 16px;position:relative;overflow:hidden}
+.kd .band{position:absolute;left:0;top:0;right:0;height:8px}
+.kd h3{margin:6px 0 0;font-family:"Dela Gothic One";font-weight:400;font-size:19px}
+.kd .nick{display:inline-block;margin:6px 0 8px;padding:1px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:700}
+.kd .km{font-family:"Dela Gothic One";font-size:28px;line-height:1}
+.kd .km span{font-size:13px}
+.kd dl{display:grid;grid-template-columns:auto 1fr;gap:0 8px;font-size:12.5px;margin:10px 0 8px}
+.kd dt{color:var(--sub)} .kd dd{margin:0;text-align:right;font-weight:700}
+.kd .q{font-size:12px;border-top:1px dashed var(--line);padding-top:8px;color:#4a3f36}
+/* charts */
+svg text{font-family:"Zen Maru Gothic",sans-serif}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin:4px 0 10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+#bars rect.bar{cursor:pointer;transition:opacity .15s}
+#bars:hover rect.bar,#bars.has-sel rect.bar{opacity:.28}
+#bars rect.bar:hover,#bars rect.bar.sel{opacity:1}
+#bars rect.bar.sel{stroke:#2b2420;stroke-width:2.5}
+#pin{transition:transform .12s ease-out;pointer-events:none}
+#pin.bounce .pinbody{animation:bounce .6s ease-out}
+@keyframes bounce{0%{transform:translateY(-14px)}40%{transform:translateY(0)}60%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+#bars .colband{fill:#e0452b;opacity:.08}
+.daybox{display:grid;grid-template-columns:1fr 1.35fr;gap:16px;margin-top:14px}
+.dayinfo h4{margin:0;font-size:20px;font-family:"Dela Gothic One";font-weight:400}
+.dayinfo .meta{color:var(--sub);font-size:13px;font-weight:700}
+.dayinfo .nums{display:flex;gap:16px;margin:10px 0;flex-wrap:wrap}
+.dayinfo .nums div{font-size:12px;color:var(--sub)} .dayinfo .nums b{display:block;font-size:20px;color:var(--ink);font-family:"Dela Gothic One";font-weight:400}
+.ev{font-size:14.5px;background:#fff;border:2px dashed var(--line);border-radius:12px;padding:12px 14px;white-space:pre-wrap;min-height:110px}
+.btn{font:inherit;font-weight:900;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.tag{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:99px;background:#efe5d2;margin:2px 4px 0 0;font-weight:700}
+/* hall of fame */
+.hof{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.hof .card{padding:16px}
+.hof .medal{font-size:30px}
+.hof .t{font-size:13px;color:var(--sub);font-weight:700}
+.hof .v{font-family:"Dela Gothic One";font-size:28px;line-height:1.1}
+.hof .r{font-weight:700;font-size:14px}
+.hof .c{font-size:12.5px;color:#4a3f36;margin-top:6px}
+/* buddies */
+.buddy{display:grid;grid-template-columns:110px 1fr 120px;align-items:center;gap:10px;margin:7px 0;font-weight:700}
+.buddy .track{height:22px;background:#efe5d2;border-radius:99px;overflow:hidden;border:2px solid var(--ink)}
+.buddy .fill{height:100%;background:var(--accent);border-radius:99px;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.buddy .n{font-size:13px;color:var(--sub)}
+.buddy.top .name::after{content:" 👑"}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+/* stays */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:2px solid var(--ink);border-radius:14px;background:var(--card);padding:10px 14px;box-shadow:3px 3px 0 var(--ink);text-align:center;min-width:110px}
+.chip .w{font-weight:900}
+.chip .c{font-family:"Dela Gothic One";font-size:26px;line-height:1.1}
+.chip .c small{font-size:12px}
+.chip .s{font-size:11.5px;color:var(--sub)}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:7px 10px;border-radius:8px;max-width:260px;opacity:0;transition:opacity .1s;z-index:9}
+.note{font-size:12px;color:var(--sub);margin-top:40px;border-top:1px dashed var(--line);padding-top:12px}
+@media (max-width:860px){
+  .kpis,.conv{grid-template-columns:repeat(2,1fr)}
+  .kaidos{grid-template-columns:repeat(2,1fr)}
+  .hof{grid-template-columns:1fr 1fr}
+  .daybox,.two{grid-template-columns:1fr}
+  .buddy{grid-template-columns:84px 1fr 96px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+  <div class="stamp">五街道 完全踏破</div>
+  <h1>山本渉の<em>1,832km</em><br>珍道中ダッシュボード</h1>
+  <div class="period">2021.10.02 日本橋 → 2026.11.01 下諏訪 ／ 5年がかり・60日・5街道</div>
+  <div class="kpis">
+    <div class="card kpi"><div class="big" data-count="1832.1" data-dec="1">0</div><div class="lbl">歩いた距離 <span class="u">km</span></div></div>
+    <div class="card kpi"><div class="big" data-count="2573072">0</div><div class="lbl">歩数 <span class="u">歩</span></div></div>
+    <div class="card kpi"><div class="big" data-count="2147">0</div><div class="lbl">上った階数 <span class="u">階</span></div></div>
+    <div class="card kpi"><div class="big" data-count="60">0</div><div class="lbl">歩いた日数 <span class="u">日</span></div></div>
+  </div>
+  <div class="conv" id="conv"></div>
+</section>
+
+<h2><span class="no">1</span>五街道 キャラ図鑑</h2>
+<p class="lead">同じ「街道歩き」でも、街道ごとに性格がまるで違う。</p>
+<div class="kaidos" id="kaidos"></div>
+
+<h2><span class="no">2</span>5年間の累計グラフ</h2>
+<p class="lead">平らな所は「冬眠期」。旗は節目の日です。旗にマウスを乗せると説明が出ます。</p>
+<div class="card"><svg id="cum" viewBox="0 0 1000 380" width="100%"></svg></div>
+
+<h2><span class="no">3</span>全60日 ふりかえりガチャ</h2>
+<p class="lead">棒1本が1日分。棒をクリックするか、ガチャを回すとその日の「できごと」が出てきます。</p>
+<div class="card">
+  <div class="legend" id="legend"></div>
+  <svg id="bars" viewBox="0 0 1000 280" width="100%"></svg>
+  <div class="daybox">
+    <div class="dayinfo">
+      <div class="meta" id="dMeta"></div>
+      <h4 id="dTitle"></h4>
+      <div class="nums" id="dNums"></div>
+      <div id="dComp"></div>
+      <div style="margin-top:14px"><button class="btn" id="gacha">🎰 ガチャを回す</button></div>
+    </div>
+    <div class="ev" id="dEv"></div>
+  </div>
+</div>
+
+<h2><span class="no">4</span>記録の殿堂</h2>
+<p class="lead">60日分の中から、えりすぐりの「なんでそうなった」日。</p>
+<div class="hof" id="hof"></div>
+
+<h2><span class="no">5</span>相棒ランキング</h2>
+<p class="lead">同行した日数の合計（部分参加は0.5日など、元データの値をそのまま合計）。</p>
+<div class="two">
+  <div class="card" id="buddies"></div>
+  <div class="card">
+    <svg id="solo" viewBox="0 0 300 300" width="100%" style="max-width:300px;display:block;margin:0 auto"></svg>
+    <p style="text-align:center;margin:6px 0 0;font-weight:700" id="soloTxt"></p>
+  </div>
+</div>
+
+<h2><span class="no">6</span>宿の通信簿</h2>
+<p class="lead">1泊の値段と満足度（☆の数）。友人の実家・別荘は☆7で採点不能のため殿堂入り枠。</p>
+<div class="two">
+  <div class="card"><svg id="stay" viewBox="0 0 560 330" width="100%"></svg></div>
+  <div class="card" id="stayTxt"></div>
+</div>
+
+<h2><span class="no">7</span>「できごと」欄の頻出ワード</h2>
+<p class="lead">各日の「できごと」に出てきた日数。この旅の正体が見えてきます。</p>
+<div class="chips" id="chips"></div>
+
+<p class="note">
+集計元：添付Excel「元データ」シート（歩行距離・歩数・上った階数はiPhoneヘルスケアの値）。前泊だけの3日は日数から除いています。<br>
+元データでは奥州街道2・3日目と笹子峠の日が「2026/4/26」になっていたため、本文の流れから 2026/10/11・10/12・10/31（推定）として並べ、甲州街道最後の2日の区間も本文に合わせて「笹子→勝沼」「茅野→下諏訪」に読み替えています。木曽路2日間の階数は本人メモの通り異常値の可能性があります。
+</p>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const DATA = {"days": [{"n": 1, "kaido": "東海道57次", "stage": 1, "d": "2021-10-02", "fr": "日本橋", "to": "神奈川", "km": 35.7, "steps": 50702, "fl": 12, "ev": "蒲田で相原氏と遭遇、最大4名のため喋りながら気持ちよくゴール", "comp": {"健太": 1, "本多": 0.1}}, {"n": 2, "kaido": "東海道57次", "stage": 1, "d": "2021-10-03", "fr": "神奈川", "to": "平塚", "km": 36.8, "steps": 49741, "fl": 18, "ev": "荻さんと戸塚マクドナルドに行き、元気回復。wifi弱く、タイムラプス自撮りを断念。モバイルバッテリ破損し新規購入。ホテルもボロく意気消沈", "comp": {}}, {"n": 3, "kaido": "東海道57次", "stage": 1, "d": "2021-10-04", "fr": "平塚", "to": "箱根湯本駅", "km": 29, "steps": 40917, "fl": 8, "ev": "初の民泊、ソロには完全にオーバースペック。箱根超えを控え即就寝", "comp": {}}, {"n": 4, "kaido": "東海道57次", "stage": 1, "d": "2021-10-05", "fr": "箱根湯本駅", "to": "三島", "km": 29.1, "steps": 47500, "fl": 161, "ev": "箱根超えにより脚痛マックス、マッサージ呼ぶ。芦ノ湖辺りで一泊が吉だろう。", "comp": {}}, {"n": 5, "kaido": "東海道57次", "stage": 1, "d": "2021-10-06", "fr": "三島", "to": "由比", "km": 48.1, "steps": 68184, "fl": 20, "ev": "叔父宅を急襲も無精髭により不審者と思われる。タイミング合わず桜えび食えず", "comp": {}}, {"n": 6, "kaido": "東海道57次", "stage": 1, "d": "2021-10-07", "fr": "由比", "to": "府中", "km": 27.8, "steps": 39309, "fl": 35, "ev": "薩埵峠超えの後、清水宿で話好き性豪おじいちゃんと1h雑談、結果短距離に終わる。鰻食す、マッサージ行くと大消費", "comp": {}}, {"n": 7, "kaido": "東海道57次", "stage": 1, "d": "2021-10-08", "fr": "府中", "to": "島田", "km": 35.1, "steps": 49656, "fl": 43, "ev": "丁子屋を涙のスルー、宇津ノ谷峠でクレカ紛失(被害なし)", "comp": {}}, {"n": 8, "kaido": "東海道57次", "stage": 1, "d": "2021-10-09", "fr": "島田", "to": "袋井", "km": 36.9, "steps": 53927, "fl": 63, "ev": "ヒロジョイン効果で金谷の石畳を何とかクリア。初の居酒屋へ", "comp": {"ヒロ": 0.8}}, {"n": 9, "kaido": "東海道57次", "stage": 1, "d": "2021-10-10", "fr": "袋井", "to": "浜松", "km": 30.9, "steps": 42438, "fl": 25, "ev": "前半戦クリアの祝杯を湯風景しおり(スパ銭)で癒やし新幹線で帰京。", "comp": {"ヒロ": 1}}, {"n": 10, "kaido": "東海道57次", "stage": 2, "d": "2022-04-23", "fr": "浜松", "to": "鷲津駅", "km": 28.8, "steps": 43030, "fl": 13, "ev": "弁天島で2度目のうなぎを食い、後半戦スタート。夜は鷲津駅の牛角で盛り上がる。ツイン12㎡は激狭!", "comp": {"ヒロ": 1, "上田": 1}}, {"n": 11, "kaido": "東海道57次", "stage": 2, "d": "2022-04-24", "fr": "新居", "to": "吉田", "km": 26.4, "steps": 37720, "fl": 24, "ev": "鷲津駅→新居宿は初のタクシー移動。二川宿本陣資料館で初の観光らしい観光を。初の雨に意気消沈。", "comp": {"ヒロ": 0.8, "上田": 0.8}}, {"n": 12, "kaido": "東海道57次", "stage": 2, "d": "2022-04-25", "fr": "吉田", "to": "池鯉鮒", "km": 50.2, "steps": 64826, "fl": 8, "ev": "土地勘皆無だが、スケッチャーズ効果か脚痛が少なく、ひたすら前へ歩くのみ。豊川市は全ルート中、歩行者保護最悪も初の女性同業者(?)二人組に遭遇", "comp": {}}, {"n": 13, "kaido": "東海道57次", "stage": 2, "d": "2022-04-26", "fr": "池鯉鮒", "to": "四日市", "km": 45.1, "steps": 60589, "fl": 17, "ev": "狭く車の往来の激しい四日市市街に閉口しつつも長距離達成", "comp": {}}, {"n": 14, "kaido": "東海道57次", "stage": 2, "d": "2022-04-27", "fr": "四日市", "to": "亀山", "km": 27.9, "steps": 38205, "fl": 19, "ev": "AMの雨と鈴鹿峠超えに備え短距離に留める。初めて二人/日の同業者に合う", "comp": {}}, {"n": 15, "kaido": "東海道57次", "stage": 2, "d": "2022-04-28", "fr": "亀山", "to": "水口", "km": 35.7, "steps": 51024, "fl": 52, "ev": "関宿の雰囲気がよく、鈴鹿峠もさほど厳しくなかったが、甲賀市の長さに閉口。途中の民家でお婆さんからオロナミンCを頂いた(お接待?)。碧水の湯でマッサージを受けるも異国者のみでリラックス出来ず", "comp": {}}, {"n": 16, "kaido": "東海道57次", "stage": 2, "d": "2022-04-29", "fr": "水口", "to": "石山駅", "km": 36.4, "steps": 51524, "fl": 33, "ev": "石部駅で藤田ジョイン、野口氏とランチでテンションマックスのはずが猛烈な雨で大津に到達できず。瀬田の居酒屋(ぎゃれ楽坐)で走破の前夜祭決行。初日の相原氏が西宮→静岡の途中に立ち寄ってくれる嬉しいハプニングも", "comp": {"藤田": 0.8}}, {"n": 17, "kaido": "東海道57次", "stage": 2, "d": "2022-04-30", "fr": "石山駅", "to": "三条大橋", "km": 22.7, "steps": 33161, "fl": 14, "ev": "雨も上がり、大津駅で前夜のマッサージで回復した藤田が加わって歩き出すもまさかの4km、追分で脚痛のためリタイア。だが、三条大橋に先回りしてくれ、ゴールの瞬間を録画してくれた。鴨川沿い、京都のお好み焼き屋、ほたるの湯(守山市)と祝杯を重ね、藤田実家ですき焼き+お刺身と素敵なおもてなしを受ける。解放感+楽しさ+嬉しさでこの旅で最も遅い23時就寝に", "comp": {"藤田": 0.2}}, {"n": 18, "kaido": "東海道57次", "stage": 2, "d": "2022-05-01", "fr": "追分駅", "to": "枚方", "km": 37.2, "steps": 48515, "fl": 15, "ev": "前日が短距離であったことや、おもてなししてくださったことにより急回復。10:40と遅めのスタートだが大阪を目指すことに。吉野家で無銭飲食の疑いをかけられる", "comp": {}}, {"n": 19, "kaido": "東海道57次", "stage": 2, "d": "2022-05-02", "fr": "枚方", "to": "高麗橋", "km": 28.1, "steps": 38676, "fl": 7, "ev": "気持ちよく淀橋沿いを歩くも、市中に入ると歩きorチャリタバコクソ野郎の多さに閉口。高麗橋も知らぬと気付かぬ程度の極小公園で賑わいなし。本島大介と居酒屋→彼女が加わりスナックで24時超の長い一日でした。\n翌日、大阪城観光(大行列で天守閣頭頂は断念)の後、帰京。", "comp": {}}, {"n": 20, "kaido": "中山道69次", "stage": 1, "d": "2023-09-16", "fr": "日本橋", "to": "大宮", "km": 33.9, "steps": 47915, "fl": 13, "ev": "別枝さんと中山道を歩き始める。別枝さんと板橋宿で別れ、暑さに苦しめられながら歩くも、脱コロナ禍+シルバーウィーク初日を軽視していた事を未だ知らず。蕨のKFCで休憩がてら大宮の宿を探すも満室だらけで、2hを要して漸く右記のホテルを確保…", "comp": {"別枝さん": 0.3}}, {"n": 21, "kaido": "中山道69次", "stage": 1, "d": "2023-09-17", "fr": "大宮", "to": "熊谷", "km": 40, "steps": 56555, "fl": 8, "ev": "さすが熊谷、前日より更に暑く、小休憩を繰り返しつつ何とか投宿。", "comp": {}}, {"n": 22, "kaido": "中山道69次", "stage": 1, "d": "2023-09-18", "fr": "熊谷", "to": "深谷", "km": 14.4, "steps": 20732, "fl": 2, "ev": "高崎を目指して颯爽と歩きだすも、余りにしんどく、初の(そして最後の)途中リタイア。優雅にグリーン席+beerで帰宅するが、インフルエンザで39℃の発熱に至った", "comp": {}}, {"n": 23, "kaido": "中山道69次", "stage": 2, "d": "2023-11-03", "fr": "深谷", "to": "高崎", "km": 38, "steps": 51612, "fl": 15, "ev": "天候に恵まれて快調に歩き出すが、またしても秋の3連休を舐めていた。本庄でまたも2hの宿探し。結果、人生初のゲストハウスへ。オーナーらと一献の後に2段ベッドへ潜り込むが、セキュリティ面での無防備さに閉口", "comp": {}}, {"n": 24, "kaido": "中山道69次", "stage": 2, "d": "2023-11-04", "fr": "高崎", "to": "横川", "km": 31.4, "steps": 43198, "fl": 20, "ev": "山岡家で朝食の後、ひたすら西進。ずっと続くだらだら長い坂に苦しめられるが、五料の茶屋本陣見学で復活。SLや鉄オタに遭遇しながら横川着", "comp": {}}, {"n": 25, "kaido": "中山道69次", "stage": 3, "d": "2024-04-27", "fr": "横川", "to": "軽井沢", "km": 22, "steps": 33200, "fl": 150, "ev": "3名で碓氷峠アタックの予定が、ヒロ氏1h遅刻。クマの足跡を見たらしく、走って這々の体で合流。箱根に迫る150階分を登った頂上でヒロ氏持参のビールで乾杯後、軽井沢にそぐわぬ3名が峠を下る。一献後、ペンションwで爆睡", "comp": {"ヒロ": 1, "藤田": 1}}, {"n": 26, "kaido": "中山道69次", "stage": 3, "d": "2024-04-28", "fr": "軽井沢", "to": "岩村田宿", "km": 22.3, "steps": 30977, "fl": 4, "ev": "雲場池1周後、快調に歩き出す。中軽井沢駅で水川が合流し、初の4人歩きに。御代田で水川・藤田が離脱し、岩村田宿までトモが迎えに来てくれた。御代田水川別荘に泊まり、BBQ!(翌朝スパ銭→藤田号で帰宅)", "comp": {"ヒロ": 1, "藤田": 0.7, "水川": 0.3}}, {"n": 27, "kaido": "中山道69次", "stage": 4, "d": "2024-05-31", "fr": "佐久平駅", "to": "長和町", "km": 31.7, "steps": 45773, "fl": 39, "ev": "佐久平のコメダ珈琲で朝食後、雨の中を歩き始める。徐々に雨も止み、旅情溢れる風景と元気の元気さに助けられ、快調に歩む。笠取峠辺りで再度の降雨や段差、脚元の悪さに苦しめられるが投宿し、素敵な夕飯を楽しむ。相部屋・民宿・二食付きの全てが街道歩き初であった", "comp": {"ヒロ": 1, "元気": 1}}, {"n": 28, "kaido": "中山道69次", "stage": 4, "d": "2024-06-01", "fr": "長和町", "to": "西餅屋", "km": 20.4, "steps": 32321, "fl": 96, "ev": "6:30朝食後、7:00から歩き出す。好天&連泊効果で荷物が軽いのは快適だが、和田峠迄、12km程度のだらだら坂で峠前に相当削られる。峠もしんどかったが、みや特製のおにぎり弁当(1,200円)で復活し、西餅屋迄ハイエースで迎えに来て貰う。2日と峠のダメージが大きく、入浴と湿布でリカバリに務める", "comp": {"ヒロ": 1, "元気": 1}}, {"n": 29, "kaido": "中山道69次", "stage": 4, "d": "2024-06-02", "fr": "西餅屋", "to": "下諏訪", "km": 14.6, "steps": 21652, "fl": 12, "ev": "終日雨予報なので、西餅屋迄送ってもらった後、ひたすら下諏訪駅を目指し、危ないバイパスを下り続ける。浪人塚、御柱木落し坂、甲州街道の終点等を見ながら10時に下諏訪駅着。帰京後、うたで一献。\n数日後(6/5)に大腸がん陽性を告げられるとは知る由も無く", "comp": {"ヒロ": 1, "元気": 1}}, {"n": 30, "kaido": "甲州街道44次", "stage": 1, "d": "2024-06-15", "fr": "日本橋", "to": "府中", "km": 36.7, "steps": 52241, "fl": 19, "ev": "大腸がん陽性発覚後、初の廃道歩き。暑さに苦しむも、本多キャプテンの昔の家探しや氷嚢冷却、新選組旧跡等で紛らせつつ、何とか府中駅に到達。アラ還がん患者より、キャプテンが参っていて密かに優越感も。スパ銭(縄文の湯・2024/10/14閉業)→サイゼリヤ(マグナムワイン*2本!)で記憶消失も無事帰宅", "comp": {"本多": 1}}, {"n": 31, "kaido": "甲州街道44次", "stage": 2, "d": "2024-10-06", "fr": "府中", "to": "高尾", "km": 25.6, "steps": 34235, "fl": 10, "ev": "14日間の入院後、初の街道歩き(withストーマ)。暑さ、見所や史跡の乏しさ、銀杏臭さに悩まされるも、歩幅の広さが歩ける喜びの現れか。", "comp": {}}, {"n": 32, "kaido": "甲州街道44次", "stage": 3, "d": "2024-10-12", "fr": "高尾", "to": "藤野", "km": 22.3, "steps": 33003, "fl": 108, "ev": "穏やかな登り坂を快適に歩くも、小仏峠の意外なハードさに苦労。毎度の下調べ不足が原因だが…駅間も広いため、藤野駅で缶ビールで乾杯後、帰宅", "comp": {"ヒロ": 1}}, {"n": 33, "kaido": "甲州街道44次", "stage": 4, "d": "2024-11-04", "fr": "藤野", "to": "大月", "km": 31.7, "steps": 43120, "fl": 116, "ev": "懲りずに下調べ不足で臨み、座頭転がしや大峠や名もなき藪漕ぎ路等、細かなアップダウンに苦しめられる。猿橋観光も早々に大月駅近辺で居酒屋を探すも満席で缶ビールで乾杯。", "comp": {"ヒロ": 1}}, {"n": 34, "kaido": "甲州街道44次", "stage": 5, "d": "2024-12-07", "fr": "大月", "to": "笹子", "km": 16.1, "steps": 22326, "fl": 30, "ev": "甲州街道最大の難所、笹子峠は朝イチにトライすべきと判断し、短距離だが笹子駅までを予めクリア。笹一酒造、笹子餅と後半はグルメ寄りであった", "comp": {"ヒロ": 1}}, {"n": 35, "kaido": "日光街道21次", "stage": 1, "d": "2025-04-12", "fr": "日本橋", "to": "北千住", "km": 14.7, "steps": 21736, "fl": 20, "ev": "11日間の入院後、初の街道歩き(withoutストーマ)。浅草、矢吹丈像、やっちゃ場跡等を楽しみつつ、北千住で一献。駅でイヤホンを線路に落としたのが余計", "comp": {"別枝さん": 1, "由美さん": 1}}, {"n": 36, "kaido": "中山道69次", "stage": 5, "d": "2025-04-26", "fr": "下諏訪", "to": "日出塩", "km": 28.2, "steps": 38413, "fl": 90, "ev": "約一年振りの中山道。暑さ、塩尻峠の急坂に苦しめられるが厨房弁慶のラーメンと唐揚げで復活。途中の平出遺跡に惹かれたが時間も気力も無くスルー。夜はコンビニ飯で休息に努める", "comp": {}}, {"n": 37, "kaido": "中山道69次", "stage": 5, "d": "2025-04-27", "fr": "日出塩", "to": "宮ノ越", "km": 34.1, "steps": 49689, "fl": 150, "ev": "前夜c/inしたヒロ氏と歩き始める。奈良井宿の喫茶たなかやで蕎麦を頂き、鳥居峠にアタック。すれ違うのは欧米系インバウンドばかり。電車の都合で義仲館はパス。", "comp": {"ヒロ": 1}}, {"n": 38, "kaido": "中山道69次", "stage": 5, "d": "2025-04-28", "fr": "宮ノ越", "to": "上松", "km": 21.8, "steps": 30816, "fl": 4, "ev": "古い町並みを歩いた後、木曽福島駅近くで地元の女性との会話を楽しむ。猿や木曽の桟を見つつ、上松駅迄。夜は家族食堂あみもとで一献。階数データは異常値間違いなし", "comp": {"ヒロ": 1}}, {"n": 39, "kaido": "中山道69次", "stage": 5, "d": "2025-04-29", "fr": "上松", "to": "野尻", "km": 25.7, "steps": 34774, "fl": 3, "ev": "ビュッフェに少し飽きてきて、ルートインをc/o。小野の滝で健脚な男性(74歳)と話してしばし一緒に歩く。道の駅大桑(ソフトクリーム)や御嶽山を楽しみつつ、野尻駅まで。この日も階数データは異常値間違いなし", "comp": {"ヒロ": 1}}, {"n": 40, "kaido": "日光街道21次", "stage": 2, "d": "2025-05-18", "fr": "北千住", "to": "南越谷", "km": 19.6, "steps": 27051, "fl": 11, "ev": "別枝さんとのんびり歩く。大した見処は無かったが、別枝さんが初の大戸屋を楽しんでいたのが収穫か。草加駅で別枝さんと別れた後、草加松原を経て南越谷駅へ。写真を見返すと「がん消滅の罠 完全寛解の謎」を読了した模様だが記憶なし。", "comp": {"別枝さん": 0.5}}, {"n": 41, "kaido": "日光街道21次", "stage": 3, "d": "2025-06-07", "fr": "南越谷", "to": "栗橋", "km": 38.9, "steps": 52044, "fl": 7, "ev": "ジョイフルで朝食後、ひたすら単調な道を歩く。杉戸の高札場、一緒に歩いたおっちゃん*3人組、幸手のカレー(さって桜サロン)、静御前のお墓…\n暑さとしんどさの印象が強い", "comp": {}}, {"n": 42, "kaido": "日光街道21次", "stage": 4, "d": "2025-06-28", "fr": "栗橋", "to": "小山", "km": 30.9, "steps": 44198, "fl": 18, "ev": "関根さんと初の街道歩き。暑いが程よいペースで快調に進み、ラーメン屋(縁)でランチ。小山評定跡以外、あまり見処は無かったが、無事に小山駅到達。細谷号で迎えに来て頂き、杉戸高野台(居酒屋ほてい)で細谷家の皆さんと打ち上げ", "comp": {"関根": 1}}, {"n": 43, "kaido": "日光街道21次", "stage": 5, "d": "2025-09-13", "fr": "小山", "to": "宇都宮", "km": 37.6, "steps": 51147, "fl": 13, "ev": "初見の「赤道(あかみち)」以外、フラットで単調な道が続く。せめて宇都宮餃子で一献と思ったが「来らっせ」がまさかの120分待ちで断念。", "comp": {}}, {"n": 44, "kaido": "日光街道21次", "stage": 6, "d": "2025-09-27", "fr": "宇都宮", "to": "日光", "km": 43.3, "steps": 59758, "fl": 5, "ev": "緩やかな上りが続く普通の市街地だが、杉並木辺りから風情が増してきた。しかし、歩道の細かな上下が激しく、「削られる」感強し。今市以北は更に風情が増すが、疲労もあり楽しむ余力が無かった。北千住で途中下車してねぎしで牛タンを掻き込む。", "comp": {}}, {"n": 46, "kaido": "中山道69次", "stage": 6, "d": "2025-10-11", "fr": "野尻", "to": "中津川", "km": 32.5, "steps": 47864, "fl": 125, "ev": "南木曽駅までは「普通の木曽路」だが、カレー(店名失念)を食べた後の妻籠宿・馬籠宿は昔の町並みが残っており、風情とともにインバウンドが急に増した。馬籠宿以西、安田と歩く途中に獣(猪?)の気配に驚いた後、「先生」に会い中津川駅前の魚民で一献", "comp": {"ヒロ": 0.8, "上田": 0.5, "安田": 0.7}}, {"n": 47, "kaido": "中山道69次", "stage": 6, "d": "2025-10-12", "fr": "中津川", "to": "大鍬", "km": 28.4, "steps": 40603, "fl": 115, "ev": "名古屋前泊の健太が始発で合流も、恵那駅発の明知鉄道に乗るために半ば小走りで12km余を急ぎ向かう(発案者の元気は元気でなく不在なのだが)。明智駅まで往復し、お食事処ひかりでランチ。WRCで盛り上がリ、「中山道浮世絵版画」の陶板が印象的な大井橋を後にして十三峠・甚平坂経由で大鍬宿へ。連日の峠越えで脚が痛み、皆を待たせることもしばしば。昨晩の「先生」宅訪問が無理だったのは残念だったが、交通至便とは言えぬ大鍬宿迄迎えに来て下さってとても助かった。安田と別れた後に「とんちゃんや さかえ」で一献", "comp": {"健太": 1, "ヒロ": 1, "安田": 1}}, {"n": 48, "kaido": "中山道69次", "stage": 6, "d": "2025-10-13", "fr": "大鍬", "to": "御嵩", "km": 25.2, "steps": 38282, "fl": 37, "ev": "三島合流後、またも「先生」に甘えて大鍬宿迄送って頂く。琵琶峠で先生と再会後、謡坂の石畳やマムシとの遭遇、罵詈雑言の発露等を経て御嵩宿へ。ここで健太の脚痛が判明し、今回は御嵩駅迄とする。コメダでランチ、鈴鹿チケット取り忘れ、新幹線満席とドタバタ続きであった", "comp": {"健太": 1, "ヒロ": 1, "三島": 1}}, {"n": 50, "kaido": "中山道69次", "stage": 7, "d": "2025-11-22", "fr": "御嵩", "to": "岐阜", "km": 45.7, "steps": 63692, "fl": 42, "ev": "秋晴れの快適な気候の中、元気の恋話を聞きながら、木曽川沿いを歩く。うとう峠、60分待ちの犬山城(断念)、丸亀製麺、三島精器と飽きずに歩くが45km超と長丁場だったため、岐阜着時点で既に薄暗く。カレー(エリックサウス)を食って大人しく解散", "comp": {"元気": 1}}, {"n": 51, "kaido": "中山道69次", "stage": 7, "d": "2025-11-23", "fr": "岐阜", "to": "垂井", "km": 29.9, "steps": 41575, "fl": 6, "ev": "長良川を超えフラットな歩きやすい道を美江寺駅まで。ここで樽見鉄道を大垣→樽見→美江寺と楽しむ。樽見駅ではNPOの方から菓子パンを頂くボーナスまで。美味しかったが喫煙可が残念なラフィングでランチ後、関ヶ原の戦い絡みの案内が目に付く赤坂宿を経て垂井へ。岐阜に戻った後、三島が加わり「居酒屋 銀ノ助」で一献", "comp": {"元気": 1}}, {"n": 52, "kaido": "中山道69次", "stage": 7, "d": "2025-11-24", "fr": "垂井", "to": "鳥居本", "km": 34.2, "steps": 49706, "fl": 19, "ev": "3人で歩き出すが、関ヶ原駅で盛りの付いた元気がまさかの途中リタイア。三島と二人で琵琶湖を目指す。関ヶ原古戦場や鹿伏峠、カフェ(にしむら)を経て鳥居本駅へ。来来亭米原店で一献の後、名駅から新幹線で帰宅", "comp": {"元気": 0.2, "三島": 1}}, {"n": 54, "kaido": "中山道69次", "stage": 8, "d": "2026-02-21", "fr": "鳥居本", "to": "武佐", "km": 30.6, "steps": 41156, "fl": 12, "ev": "京都→JR→米原→近江鉄道→鳥居本と移動して歩き開始。豊郷小学校旧校舎群や伊藤忠兵衛記念館、名残の松等を全スルーし武佐駅へ(途中で「國眼」家も発見)。近江八幡駅で消えゆくロッテリアに寄ろうと企むが残念ながら閉店済であった。藤田家到着後、皆でベトナム料理(フォーヴェット365)を食べた後、4時間余り宅飲み後就寝。", "comp": {}}, {"n": 55, "kaido": "中山道69次", "stage": 8, "d": "2026-02-22", "fr": "武佐", "to": "草津", "km": 26.6, "steps": 37310, "fl": 14, "ev": "平田がVlogカメラを回しながら最終日スタート。鏡宿や道の駅、藤田の母校や野洲宿、守山宿を経て草津宿へ無事到達。草津川跡地公園で乾杯した後、スパ銭に寄って周作と共にAZICA栗東駅前店で打ち上げ。平田は帰宅したが、藤田家にもう一泊。\n(翌日は井上墓参→井上母宅で一献)", "comp": {"ヒロ": 1, "藤田": 1, "平田": 1}}, {"n": 56, "kaido": "甲州街道44次", "stage": 6, "d": "2026-04-24", "fr": "勝沼", "to": "韮崎", "km": 36.1, "steps": 49496, "fl": 18, "ev": "(前夜の降雨のため、笹子峠はスキップ)甲州街道の交点までタクシー移動後、甲府への緩い坂道を降っていく。見渡す限りの葡萄畑、シャトレーゼや大戸屋の創業者生誕の地、石和温泉、山梨学院大学、謎のパン屋(松栄堂)と立ち寄る程では無い名所を見ながら、一旦ホテルでリュックの軽量化。信州でほうとうを頂き、韮崎駅へ。甲府に戻り四文屋で一献", "comp": {"ヒロ": 1}}, {"n": 57, "kaido": "甲州街道44次", "stage": 6, "d": "2026-04-25", "fr": "韮崎", "to": "小淵沢", "km": 31, "steps": 44497, "fl": 17, "ev": "松屋で朝食後、韮崎の由来や七里岩、小林一三(宝塚・阪急の創始者)生家跡と見聞を深めつつ、緩やかな上り道を長野方面へ。はらぢ道や台ヶ原宿の日本酒蔵元「七賢」で小休止の後、小淵沢でタクシーを呼び甲府に戻る。焼売のジョー甲府店で一献", "comp": {"ヒロ": 1}}, {"n": 58, "kaido": "甲州街道44次", "stage": 6, "d": "2026-04-26", "fr": "小淵沢", "to": "茅野", "km": 25.5, "steps": 36852, "fl": 41, "ev": "吉野家で朝食後、TRAIN SUITE 四季島を甲府駅で発見。蔦木宿や金沢宿を経て茅野駅へ。そこそこのアップダウンで疲れていたのと、ゴールの下諏訪宿は余力残しで着きたいこともあり、茅野駅迄として帰宅", "comp": {"ヒロ": 1}}, {"n": 59, "kaido": "奥州街道27次", "stage": 1, "d": "2026-10-10", "fr": "宇都宮", "to": "喜連川", "km": 31.8, "steps": 42205, "fl": 13, "ev": "追分までタクシーで移動後、歩き出すが地元のタクシー運転手すら「奥州街道と日光街道の追分」が分からず、なんとなく不安に。案の定、史跡も銘板も無く、単なる市街地ウォークが延々と続く。白沢宿、氏家宿と徐々に雰囲気が増すが、程なく喜連川エリアに到着。スムース過ぎてc/in時間に届いていなかったので、コンビニで休憩&一献を。", "comp": {}}, {"n": 60, "kaido": "奥州街道27次", "stage": 1, "d": "2026-10-11", "fr": "喜連川", "to": "那須塩原", "km": 31.9, "steps": 44283, "fl": 3, "ev": "そこら中にある「梁和夫」の看板を見ながらひたすら北進。ステーキみやで3k投じて大休止。街道とホテルが5km程度離れていたので、タクシーで那須塩原駅エリアまで。マッサージを求めて数軒電話するも、皆不通で断念", "comp": {}}, {"n": 61, "kaido": "奥州街道27次", "stage": 1, "d": "2026-10-12", "fr": "那須塩原", "to": "白河", "km": 39.2, "steps": 53319, "fl": 18, "ev": "AIが「今日の工程は25km程度」と返すので、呑気な気分で予約した朝イチのタクシーに乗り、街道に向かう。ベルクで小休止後、芦野宿の丁子屋(開店前!)をスルーして歩き続けるが、なかなか栃木県を脱することが出来ない。だらだらと登り坂を歩き続け、ようやく福島県白河市に到達し、朝日屋食堂で白河ラーメンを食す。その後、蔀電気さんに助けられたり、80歳絡みの老夫婦(今日で五街道コンプリート!)と喋ったりしつつ、白河宿に這々の体でたどり着く。ゴールなのに「そこら辺によくある公園」っぽいし、白河小峰城跡を観る時間も余力もナシ。挙句の果てに新幹線は満席で、在来線を選ぶもトラブルで6.5h超を要し、散々な奥州街道最終日であった", "comp": {}}, {"n": 62, "kaido": "甲州街道44次", "stage": 7, "d": "2026-10-31", "fr": "笹子", "to": "勝沼", "km": 22.1, "steps": 30364, "fl": 112, "ev": "積み残した笹子峠へ。補給不可能なので、食べ物と飲み物を満載した重いリュックを背負い、鈴や爆竹でクマに備えていざ挑戦。「甲州街道一の難所」とHPや動画で散々脅されていたので戦々恐々であったが、40分弱でエントリから矢立の杉へ。そこから45分で峠のピークにたどり着くことが出来た。数度の迷い道と、矢立の杉のぜんまい仕掛けの音響装置が壊れていたのが残念であったが。その後、存外しんどかった聖観音堂を超えて、タクシーを呼んで勝沼ぶどう郷駅へ。2時間程度在来線に揺られて茅野駅→c/in→テンホウで一献。テンホウの餃子の味が謎だった。", "comp": {"ヒロ": 1}}, {"n": 63, "kaido": "甲州街道44次", "stage": 7, "d": "2026-11-01", "fr": "茅野", "to": "下諏訪", "km": 17.6, "steps": 23738, "fl": 5, "ev": "いよいよ最終日。味気ない市街地を覚悟していたが、一本離れた良い感じで寂れた路で諏訪湖を横目にのんびりと進む。途中雨が降ってきたが、寒くは無く10時過ぎに諏訪大社・下社秋宮および甲州道中・中山道合流之地へ。近くの立ち寄り湯(菅野温泉)に浸かった後にうたへ向かい、別枝さんと一献。", "comp": {"ヒロ": 1}}], "stays": [{"n": 1, "name": "ホテルユニゾ横浜駅西", "price": 5233, "star": 5, "kaido": "東海道57次", "d": "2021-10-02"}, {"n": 2, "name": "ホテルリブマックスBUDGET平塚駅前", "price": 3840, "star": 1, "kaido": "東海道57次", "d": "2021-10-03"}, {"n": 3, "name": "Condominium MIRAHAKONE", "price": 9600, "star": 5, "kaido": "東海道57次", "d": "2021-10-04"}, {"n": 4, "name": "ホテルセレクトイン三島", "price": 5200, "star": 3, "kaido": "東海道57次", "d": "2021-10-05"}, {"n": 5, "name": "スーパーホテルJR富士駅前禁煙館", "price": 3800, "star": 4, "kaido": "東海道57次", "d": "2021-10-06"}, {"n": 6, "name": "スマイルホテル静岡", "price": 4050, "star": 3, "kaido": "東海道57次", "d": "2021-10-07"}, {"n": 7, "name": "ホテルルートイン島田駅前", "price": 5000, "star": 3, "kaido": "東海道57次", "d": "2021-10-08"}, {"n": 8, "name": "くれたけインプレミアム袋井駅前", "price": 5080, "star": 5, "kaido": "東海道57次", "d": "2021-10-09"}, {"n": 10, "name": "くれたけイン浜名湖", "price": 6028, "star": 2, "kaido": "東海道57次", "d": "2022-04-23"}, {"n": 11, "name": "ホテルルートイン豊橋駅前", "price": 6673, "star": 4, "kaido": "東海道57次", "d": "2022-04-24"}, {"n": 12, "name": "東横イン名鉄知立駅前", "price": 5296, "star": 4, "kaido": "東海道57次", "d": "2022-04-25"}, {"n": 13, "name": "ホテルルートイン豊橋駅前", "price": 7706, "star": 4, "kaido": "東海道57次", "d": "2022-04-26"}, {"n": 14, "name": "カンデオホテルズ亀山", "price": 4790, "star": 5, "kaido": "東海道57次", "d": "2022-04-27"}, {"n": 15, "name": "ホテルルートイン甲賀水口", "price": 6435, "star": 4, "kaido": "東海道57次", "d": "2022-04-28"}, {"n": 16, "name": "アパホテル<びわ湖 瀬田駅前>", "price": 8818, "star": 3, "kaido": "東海道57次", "d": "2022-04-29"}, {"n": 17, "name": "藤田敦実家<野洲市>", "price": null, "star": 7, "kaido": "東海道57次", "d": "2022-04-30"}, {"n": 18, "name": "ひらかたサンプラザホテル", "price": 8100, "star": 3, "kaido": "東海道57次", "d": "2022-05-01"}, {"n": 19, "name": "リーガプレイス肥後橋", "price": 4576, "star": 4, "kaido": "東海道57次", "d": "2022-05-02"}, {"n": 20, "name": "エクセルイン大宮", "price": 15700, "star": 3, "kaido": "中山道69次", "d": "2023-09-16"}, {"n": 21, "name": "スマイルホテル熊谷", "price": 7700, "star": 3, "kaido": "中山道69次", "d": "2023-09-17"}, {"n": 23, "name": "灯り屋", "price": 5000, "star": 2, "kaido": "中山道69次", "d": "2023-11-03"}, {"n": 25, "name": "軽井沢ペンション 佐藤のぬくもり", "price": 5970, "star": 3, "kaido": "中山道69次", "d": "2024-04-27"}, {"n": 26, "name": "水川別荘<御代田町>", "price": null, "star": 7, "kaido": "中山道69次", "d": "2024-04-28"}, {"n": 27, "name": "民宿みや", "price": 11000, "star": 4, "kaido": "中山道69次", "d": "2024-05-31"}, {"n": 28, "name": "民宿みや", "price": 12000, "star": 4, "kaido": "中山道69次", "d": "2024-06-01"}, {"n": 36, "name": "ホテルルートイン塩尻", "price": 7850, "star": 3, "kaido": "中山道69次", "d": "2025-04-26"}, {"n": 37, "name": "ホテルルートイン塩尻", "price": 8000, "star": 3, "kaido": "中山道69次", "d": "2025-04-27"}, {"n": 38, "name": "ホテルルートイン塩尻", "price": 8000, "star": 3, "kaido": "中山道69次", "d": "2025-04-28"}, {"n": 45, "name": "プラザホテル中津川 栄", "price": 6160, "star": 3, "kaido": "中山道69次", "d": "2025-10-10"}, {"n": 46, "name": "プラザホテル中津川 栄", "price": 6160, "star": 3, "kaido": "中山道69次", "d": "2025-10-11"}, {"n": 47, "name": "プラザホテル中津川 栄", "price": 6160, "star": 3, "kaido": "中山道69次", "d": "2025-10-12"}, {"n": 49, "name": "コンフォートホテル岐阜", "price": 13750, "star": 3, "kaido": "中山道69次", "d": "2025-11-21"}, {"n": 50, "name": "コンフォートホテル岐阜", "price": 13750, "star": 3, "kaido": "中山道69次", "d": "2025-11-22"}, {"n": 51, "name": "コンフォートホテル岐阜", "price": 13750, "star": 3, "kaido": "中山道69次", "d": "2025-11-23"}, {"n": 53, "name": "京都プラザホテル京都駅南", "price": 9500, "star": 3, "kaido": "中山道69次", "d": "2026-02-20"}, {"n": 54, "name": "藤田敦実家<野洲市>", "price": null, "star": 7, "kaido": "中山道69次", "d": "2026-02-21"}, {"n": 55, "name": "藤田敦実家<野洲市>", "price": null, "star": 7, "kaido": "中山道69次", "d": "2026-02-22"}, {"n": 56, "name": "ドーミーイン甲府丸の内", "price": 8550, "star": 4, "kaido": "甲州街道44次", "d": "2026-04-24"}, {"n": 57, "name": "ドーミーイン甲府丸の内", "price": 13050, "star": 4, "kaido": "甲州街道44次", "d": "2026-04-25"}, {"n": 59, "name": "ホテル かつらぎ", "price": 5500, "star": 2, "kaido": "奥州街道27次", "d": "2026-10-10"}, {"n": 60, "name": "東横INN那須塩原駅西口", "price": 9000, "star": 4, "kaido": "奥州街道27次", "d": "2026-10-11"}], "comp": {"健太": 3, "本多": 1.1, "ヒロ": 23.4, "上田": 2.3, "藤田": 3.7, "別枝さん": 1.8, "水川": 0.3, "元気": 5.2, "由美さん": 1, "関根": 1, "安田": 1.7, "三島": 2, "平田": 1}, "kw": {"一献": 23, "峠": 18, "苦しめ": 11, "断念/スルー": 11, "雨": 8, "タクシー": 7, "暑": 7, "スパ銭": 7, "クマ": 6, "脚痛": 5, "マッサージ": 5, "閉口": 4, "カレー": 3, "ラーメン": 3, "うなぎ": 2}};
+const K = {
+ "東海道57次":{c:"var(--tokai)",hex:"#2f7fb8",short:"東海道",nick:"うなぎと雨と前夜祭",q:"藤田実家ですき焼き+お刺身…この旅で最も遅い23時就寝に"},
+ "中山道69次":{c:"var(--naka)",hex:"#3f8f5a",short:"中山道",nick:"峠と相棒と一献",q:"箱根に迫る150階分を登った頂上でヒロ氏持参のビールで乾杯"},
+ "甲州街道44次":{c:"var(--koshu)",hex:"#8a4fa3",short:"甲州街道",nick:"下調べ不足の藪漕ぎ",q:"懲りずに下調べ不足で臨み…細かなアップダウンに苦しめられる"},
+ "日光街道21次":{c:"var(--nikko)",hex:"#d49a1f",short:"日光街道",nick:"平坦・単調・暑い",q:"せめて宇都宮餃子で一献と思ったが…まさかの120分待ちで断念"},
+ "奥州街道27次":{c:"var(--oshu)",hex:"#c4502f",short:"奥州街道",nick:"史跡ゼロの最終章",q:"在来線を選ぶもトラブルで6.5h超…散々な奥州街道最終日であった"}
+};
+const ORDER = ["東海道57次","中山道69次","甲州街道44次","日光街道21次","奥州街道27次"];
+const days = DATA.days;
+const fmt = (n,d=0)=>n.toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
+const ymd = s=>{const [y,m,d]=s.split('-');return `${y}.${+m}.${+d}`};
+const tip = document.getElementById('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;const x=Math.min(e.clientX+14,innerWidth-275);tip.style.left=x+'px';tip.style.top=(e.clientY+14)+'px'}
+function hideTip(){tip.style.opacity=0}
+const NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent,text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;if(parent)parent.appendChild(e);return e}
+
+/* --- counters --- */
+const tot = days.reduce((a,d)=>({km:a.km+d.km,st:a.st+d.steps,fl:a.fl+d.fl}),{km:0,st:0,fl:0});
+document.querySelectorAll('[data-count]').forEach(n=>{
+  const to=+n.dataset.count,dec=+(n.dataset.dec||0);const t0=performance.now();
+  const step=t=>{const p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);n.textContent=fmt(to*e,dec);if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step);
+});
+const ikkon = DATA.kw["一献"];
+const conv=[
+ ["🏃","フルマラソン "+fmt(tot.km/42.195,1)+"本分","42.195kmで割ると"],
+ ["🗻","富士山 "+fmt(tot.fl*3/3776,1)+"座分 登った","1階=3mで換算すると"+fmt(tot.fl*3)+"m"],
+ ["👣","1日平均 "+fmt(tot.km/days.length,1)+"km","平均 "+fmt(tot.st/days.length)+"歩/日"],
+ ["🍺","一献率 "+Math.round(ikkon/days.length*100)+"%",days.length+"日中"+ikkon+"日は飲んで締めた"]
+];
+document.getElementById('conv').innerHTML=conv.map(c=>`<div class="card"><div class="ico">${c[0]}</div><div><b>${c[1]}</b><small>${c[2]}</small></div></div>`).join('');
+
+/* --- kaido cards --- */
+document.getElementById('kaidos').innerHTML=ORDER.map(k=>{
+  const ds=days.filter(d=>d.kaido===k),km=ds.reduce((a,d)=>a+d.km,0),fl=ds.reduce((a,d)=>a+d.fl,0);
+  const first=ds[0].d.slice(0,4),last=ds[ds.length-1].d.slice(0,4);
+  const max=ds.reduce((a,d)=>d.km>a.km?d:a);
+  return `<div class="card kd"><div class="band" style="background:${K[k].c}"></div>
+   <h3>${k}</h3><span class="nick" style="background:${K[k].c}">${K[k].nick}</span>
+   <div class="km">${fmt(km,1)}<span> km</span></div>
+   <dl><dt>日数</dt><dd>${ds.length}日</dd><dt>上った階数</dt><dd>${fmt(fl)}階</dd><dt>1日平均</dt><dd>${fmt(km/ds.length,1)}km</dd><dt>期間</dt><dd>${first===last?first:first+'–'+last.slice(2)}</dd><dt>最長日</dt><dd>${max.km}km</dd></dl>
+   <div class="q">「${K[k].q}」</div></div>`}).join('');
+
+/* --- cumulative chart --- */
+(function(){
+  const svg=document.getElementById('cum'),W=1000,H=380,m={l:56,r:26,t:70,b:34};
+  const t=s=>new Date(s+"T00:00:00").getTime();
+  const t0=t("2021-09-01"),t1=t("2026-12-15");
+  const x=v=>m.l+(v-t0)/(t1-t0)*(W-m.l-m.r), y=v=>H-m.b-v/2000*(H-m.t-m.b);
+  for(let v=0;v<=2000;v+=500){el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:"#e2d6c0","stroke-dasharray":"3 4"},svg);el('text',{x:m.l-8,y:y(v)+4,"text-anchor":"end","font-size":12,fill:"#7a6d60"},svg,fmt(v)+(v?'':' km'))}
+  for(let yr=2022;yr<=2026;yr++){const xx=x(t(yr+"-01-01"));el('line',{x1:xx,x2:xx,y1:m.t-10,y2:H-m.b,stroke:"#e2d6c0"},svg);el('text',{x:xx+4,y:H-m.b+20,"font-size":12,fill:"#7a6d60"},svg,yr)}
+  // hibernation band
+  const g1=t("2022-05-02"),g2=t("2023-09-16");
+  el('rect',{x:x(g1),y:m.t-10,width:x(g2)-x(g1),height:H-m.b-m.t+10,fill:"#e9dfcb",opacity:.6},svg);
+  el('text',{x:(x(g1)+x(g2))/2,y:y(820),"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#7a6d60"},svg,"💤 冬眠 "+Math.round((g2-g1)/864e5)+"日");
+  // path segments colored by kaido
+  let cum=0,prev=null;
+  days.forEach(d=>{const nx=x(t(d.d)),ny=y(cum+d.km);
+    if(prev){el('line',{x1:prev[0],y1:prev[1],x2:nx,y2:prev[1],stroke:"#bfb09a","stroke-width":2.5},svg)}
+    const sy=prev?prev[1]:y(0);
+    el('line',{x1:nx,y1:sy,x2:nx,y2:ny,stroke:K[d.kaido].hex,"stroke-width":5,"stroke-linecap":"round"},svg);
+    cum+=d.km;prev=[nx,ny];});
+  const flags=[
+   ["2021-10-02","🚩","出発！日本橋から東海道へ"],
+   ["2022-04-30","🎉","三条大橋ゴール。東海道を走破"],
+   ["2023-09-18","🤒","初の途中リタイア。帰宅後39℃の発熱"],
+   ["2024-04-27","🍺","碓氷峠の頂上でビール乾杯"],
+   ["2024-10-06","🌱","入院を経て街道歩きに復帰"],
+   ["2025-09-27","⛩️","日光到着。日光街道を走破"],
+   ["2026-02-22","🏁","草津宿到着。中山道を走破"],
+   ["2026-11-01","👑","下諏訪で五街道コンプリート！（直前の10/12には白河に到着し奥州街道も走破）"]
+  ];
+  let cmap={},c2=0;days.forEach(d=>{c2+=d.km;cmap[d.d]=c2});
+  flags.forEach((f,i)=>{const cx=x(t(f[0])),cy=y(cmap[f[0]]||0);const lift=i%2?34:58;
+    const g=el('g',{style:"cursor:pointer"},svg);
+    el('line',{x1:cx,y1:cy,x2:cx,y2:cy-lift,stroke:"#2b2420","stroke-width":1.2},g);
+    el('circle',{cx,cy:cy-lift-11,r:14,fill:"#fffaf0",stroke:"#2b2420","stroke-width":1.5},g);
+    el('text',{x:cx,y:cy-lift-6,"text-anchor":"middle","font-size":14},g,f[1]);
+    g.addEventListener('mousemove',e=>showTip(e,`<b>${ymd(f[0])}</b><br>${f[2]}<br>累計 ${fmt(cmap[f[0]]||0,1)}km`));
+    g.addEventListener('mouseleave',hideTip);
+  });
+})();
+
+/* --- 60 bars --- */
+document.getElementById('legend').innerHTML=ORDER.map(k=>`<span><i style="background:${K[k].c}"></i>${K[k].short}</span>`).join('');
+let sel=null;
+(function(){
+  const svg=document.getElementById('bars'),W=1000,H=280,m={l:40,r:10,t:50,b:28};
+  const bw=(W-m.l-m.r)/days.length,y=v=>H-m.b-v/55*(H-m.t-m.b);
+  [0,10,20,30,40,50].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:y(v),y2:y(v),stroke:"#e2d6c0","stroke-dasharray":v?"3 4":""},svg);el('text',{x:m.l-6,y:y(v)+4,"text-anchor":"end","font-size":11,fill:"#7a6d60"},svg,v)});
+  el('text',{x:m.l-6,y:m.t-4,"text-anchor":"end","font-size":11,fill:"#7a6d60"},svg,"km");
+  days.forEach((d,i)=>{const r=el('rect',{class:"bar",x:m.l+i*bw+1.2,y:y(d.km),width:bw-2.4,height:y(0)-y(d.km),rx:2.5,fill:K[d.kaido].hex},svg);
+    r.addEventListener('mousemove',e=>showTip(e,`<b>${ymd(d.d)}</b> ${d.fr}→${d.to}<br>${d.km}km`));
+    r.addEventListener('mouseleave',hideTip);
+    r.addEventListener('click',()=>pick(i));
+    d._r=r;d._x=m.l+i*bw+bw/2;d._y=y(d.km);});
+  // selection band + pin
+  const band=el('rect',{class:"colband",x:0,y:m.t-12,width:bw,height:H-m.b-m.t+12,rx:3,style:"display:none"},svg);
+  svg.insertBefore(band,svg.querySelector('rect.bar'));
+  const pin=el('g',{id:"pin",style:"display:none"},svg);
+  const pb=el('g',{class:"pinbody"},pin);
+  el('rect',{x:-30,y:-40,width:60,height:22,rx:11,fill:"#e0452b",stroke:"#2b2420","stroke-width":2},pb);
+  el('text',{id:"pinTxt",x:0,y:-24.5,"text-anchor":"middle","font-size":12,"font-weight":900,fill:"#fff"},pb,"");
+  el('path',{d:"M-6,-19 L6,-19 L0,-9 Z",fill:"#2b2420"},pb);
+  window._barGeo={bw,band,pin,svg};
+  let lastY=null;days.forEach((d,i)=>{const yy=d.d.slice(0,4);if(yy!==lastY){el('text',{x:m.l+i*bw+2,y:H-8,"font-size":11,fill:"#7a6d60"},svg,yy);lastY=yy}});
+})();
+function pick(i,final=true){
+  const d=days[i];if(sel!=null)days[sel]._r.classList.remove('sel');sel=i;d._r.classList.add('sel');
+  const G=window._barGeo;G.svg.classList.add('has-sel');
+  G.band.style.display='';G.band.setAttribute('x',d._x-G.bw/2);
+  G.pin.style.display='';G.pin.setAttribute('transform',`translate(${d._x},${d._y})`);
+  document.getElementById('pinTxt').textContent=(i+1)+'日目';
+  if(final){G.pin.classList.remove('bounce');void G.pin.getBBox();G.pin.classList.add('bounce');}
+  document.getElementById('dMeta').innerHTML=`<span style="color:${K[d.kaido].hex}">●</span> ${d.kaido} ／ ${ymd(d.d)}（通算${i+1}日目）`;
+  document.getElementById('dTitle').textContent=`${d.fr} → ${d.to}`;
+  document.getElementById('dNums').innerHTML=`<div><b>${d.km}</b>km</div><div><b>${fmt(d.steps)}</b>歩</div><div><b>${d.fl}</b>階</div><div><b>${(d.km*1e5/d.steps).toFixed(0)}</b>cm 歩幅</div>`;
+  const cs=Object.keys(d.comp);
+  document.getElementById('dComp').innerHTML=cs.length?'同行：'+cs.map(c=>`<span class="tag">${c}</span>`).join(''):'<span class="tag">ソロ</span>';
+  document.getElementById('dEv').textContent=d.ev||'（記録なし）';
+}
+document.getElementById('gacha').addEventListener('click',()=>{
+  let n=0;const spin=()=>{const last=++n>=14;pick(Math.floor(Math.random()*days.length),last);if(!last)setTimeout(spin,40+n*14);else document.getElementById('bars').scrollIntoView({behavior:'smooth',block:'center'})};spin();
+});
+pick(3);
+
+/* --- hall of fame --- */
+(function(){
+  const by=(f,dir=1)=>days.reduce((a,d)=>(f(d)-f(a))*dir>0?d:a);
+  const stride=d=>d.km*1e5/d.steps;
+  const L=by(d=>d.km),S=by(d=>d.km,-1),F=by(d=>d.fl),ST=by(stride),SS=by(stride,-1);
+  const comp=by(d=>Object.keys(d.comp).length);
+  const card=(m,t,v,d,c)=>`<div class="card"><div class="medal">${m}</div><div class="t">${t}</div><div class="v">${v}</div><div class="r">${ymd(d.d)}　${d.fr}→${d.to}</div><div class="c">${c}</div></div>`;
+  document.getElementById('hof').innerHTML=[
+   card("🥇","いちばん歩いた日",L.km+"km",L,"土地勘ゼロでも「ひたすら前へ歩くのみ」。新しい靴の効果で脚痛が少なかったらしい。"),
+   card("🐢","いちばん短い日",S.km+"km",S,"颯爽と歩き出したがあまりにしんどく、初の（そして最後の）途中リタイア。グリーン席＋ビールで帰宅。"),
+   card("⛰️","いちばん登った日",F.fl+"階",F,"箱根越え。脚痛マックスでマッサージを呼ぶ。「芦ノ湖辺りで一泊が吉」という教訓つき。"),
+   card("🦘","いちばん大股の日",stride(ST).toFixed(1)+"cm",ST,"本人いわく「歩幅の広さが歩ける喜びの現れか」。"),
+   card("🐧","いちばん小股の日",stride(SS).toFixed(1)+"cm",SS,"碓氷峠の山道。1時間遅刻した相棒はクマの足跡を見て走って合流。"),
+   card("🎪","いちばん大人数の日",(Object.keys(comp.comp).length+1)+"人",comp,"恵那から明知鉄道に乗るため12km余を小走り。言い出しっぺは不在。")
+  ].join('');
+})();
+
+/* --- buddies --- */
+(function(){
+  const arr=Object.entries(DATA.comp).sort((a,b)=>b[1]-a[1]);const mx=arr[0][1];
+  const box=document.getElementById('buddies');
+  box.innerHTML=arr.map((a,i)=>`<div class="buddy${i?'':' top'}"><span class="name">${a[0]}</span><div class="track"><div class="fill" data-w="${a[1]/mx*100}" style="background:${i?'#c9a77a':'var(--accent)'}"></div></div><span class="n">${fmt(a[1],1)}日（${(a[1]/days.length*100).toFixed(0)}%）</span></div>`).join('')
+   +`<p style="margin:12px 0 0;font-size:13px;color:#4a3f36">ヒロさんは60日中${fmt(arr[0][1],1)}日に登場。2位以下の合計（${fmt(arr.slice(1).reduce((s,a)=>s+a[1],0),1)}日）にほぼ並ぶ、もはや準主役。</p>`;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){box.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');io.disconnect()}}));io.observe(box);
+  // solo donut
+  const solo=days.filter(d=>!Object.keys(d.comp).length).length,grp=days.length-solo;
+  const svg=document.getElementById('solo'),cx=150,cy=150,R=110,r=66;
+  const arc=(a0,a1,col)=>{const p=(a,rr)=>[cx+rr*Math.sin(a),cy-rr*Math.cos(a)];const lg=a1-a0>Math.PI?1:0;const[a,b]=[p(a0,R),p(a1,R)],[c,d]=[p(a1,r),p(a0,r)];
+    el('path',{d:`M${a}A${R},${R} 0 ${lg} 1 ${b}L${c}A${r},${r} 0 ${lg} 0 ${d}Z`,fill:col,stroke:"#2b2420","stroke-width":2},svg)};
+  const s=solo/days.length*2*Math.PI;arc(0,s,"#efe5d2");arc(s,2*Math.PI,"#e0452b");
+  el('text',{x:cx,y:cy-6,"text-anchor":"middle","font-size":15,"font-weight":700,fill:"#7a6d60"},svg,"誰かと一緒");
+  el('text',{x:cx,y:cy+24,"text-anchor":"middle","font-size":30,"font-family":"Dela Gothic One",fill:"#2b2420"},svg,grp+"日");
+  document.getElementById('soloTxt').innerHTML=`ソロ ${solo}日 ／ 誰かと一緒 ${grp}日<br><span style="font-weight:400;font-size:13px;color:#7a6d60">中山道以降はほぼ毎回だれかが合流</span>`;
+})();
+
+/* --- stays --- */
+(function(){
+  const st=DATA.stays.filter(s=>s.name);
+  const paid=st.filter(s=>s.price);const home=st.filter(s=>!s.price);
+  // dedupe consecutive same hotel nights -> keep each night
+  const svg=document.getElementById('stay'),W=560,H=330,m={l:44,r:16,t:20,b:40};
+  const x=v=>m.l+(v-2000)/(17000-2000)*(W-m.l-m.r),y=v=>H-m.b-(v-0.5)/(7.5-0.5)*(H-m.t-m.b);
+  for(let s=1;s<=7;s++){el('line',{x1:m.l,x2:W-m.r,y1:y(s),y2:y(s),stroke:"#e2d6c0","stroke-dasharray":"3 4"},svg);el('text',{x:m.l-6,y:y(s)+4,"text-anchor":"end","font-size":11,fill:"#7a6d60"},svg,"☆"+s)}
+  [4000,8000,12000,16000].forEach(v=>el('text',{x:x(v),y:H-m.b+16,"text-anchor":"middle","font-size":11,fill:"#7a6d60"},svg,fmt(v)+"円"));
+  el('text',{x:W-m.r,y:H-6,"text-anchor":"end","font-size":11,fill:"#7a6d60"},svg,"1泊の価格 →");
+  el('rect',{x:m.l,y:y(7.45),width:W-m.l-m.r,height:y(6.55)-y(7.45),fill:"#fde3cf",rx:6},svg);
+  el('text',{x:x(9500),y:y(7)+5,"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#c4502f"},svg,"殿堂入り：友人の実家・別荘（0円・☆7）× "+home.length+"泊");
+  const groups={};paid.forEach(s=>{const k=s.price+'_'+s.star;(groups[k]=groups[k]||[]).push(s)});
+  Object.values(groups).forEach(g=>{const s=g[0];
+    const c=el('circle',{cx:x(s.price),cy:y(s.star),r:6+g.length*2,fill:K[s.kaido].hex,"fill-opacity":.8,stroke:"#2b2420","stroke-width":1.5,style:"cursor:pointer"},svg);
+    c.addEventListener('mousemove',e=>showTip(e,`<b>${[...new Set(g.map(v=>v.name))].join('<br>')}</b><br>${fmt(s.price)}円 ／ ${'☆'.repeat(s.star)}${g.length>1?'<br>×'+g.length+'泊':''}`));
+    c.addEventListener('mouseleave',hideTip);});
+  const total=paid.reduce((a,s)=>a+s.price,0);
+  const best=paid.filter(s=>s.star>=5).sort((a,b)=>a.price-b.price)[0];
+  const worst=paid.reduce((a,s)=>s.star<a.star?s:a);
+  const pricy=paid.reduce((a,s)=>s.price>a.price?s:a);
+  document.getElementById('stayTxt').innerHTML=`
+   <div class="big" style="font-size:30px">${fmt(total)}<span style="font-size:14px"> 円</span></div>
+   <div style="color:#7a6d60;font-weight:700;font-size:13px">有料の宿 ${paid.length}泊・平均 ${fmt(total/paid.length)}円/泊（実家・別荘 ${home.length}泊は0円）</div>
+   <div style="margin-top:14px;font-size:14px;line-height:1.75">
+   <div>💎 <b>コスパ王</b>：${best.name}（${fmt(best.price)}円で☆5）</div>
+   <div>🥀 <b>最低評価</b>：${worst.name}（☆${worst.star}）— wifi弱、バッテリー破損、「ホテルもボロく意気消沈」</div>
+   <div>💸 <b>最高額</b>：${pricy.name}（${fmt(pricy.price)}円）— 連休を甘く見て、宿探しに2時間</div>
+   <div>🏆 <b>☆7</b>：藤田さん実家（3泊）・水川さん別荘 — すき焼き、BBQ、4時間の宅飲み</div>
+   </div>`;
+})();
+
+/* --- word chips --- */
+(function(){
+  const ico={"一献":"🍺","峠":"⛰️","苦しめ":"😩","断念/スルー":"🙅","雨":"☔","タクシー":"🚕","暑":"🥵","スパ銭":"♨️","クマ":"🐻","脚痛":"🦵","マッサージ":"💆","閉口":"😶","カレー":"🍛","ラーメン":"🍜","うなぎ":"🐟"};
+  const lab={"一献":"一献・乾杯","苦しめ":"苦しめられる","暑":"暑さ","クマ":"獣と遭遇","断念/スルー":"断念・スルー","スパ銭":"スパ銭・湯"};
+  document.getElementById('chips').innerHTML=Object.entries(DATA.kw).map(([k,v])=>`<div class="chip"><div style="font-size:26px">${ico[k]||'•'}</div><div class="w">${lab[k]||k}</div><div class="c">${v}<small> 日</small></div><div class="s">${(v/days.length*100).toFixed(0)}%</div></div>`).join('');
+})();
+</script>
+</body>
+</html>
