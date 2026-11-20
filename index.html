@@ -91,6 +91,19 @@ svg text{font-family:"Zen Maru Gothic",sans-serif}
 .chip .c{font-family:"Dela Gothic One";font-size:26px;line-height:1.1}
 .chip .c small{font-size:12px}
 .chip .s{font-size:11.5px;color:var(--sub)}
+.chip{font:inherit;color:inherit;cursor:pointer;transition:transform .1s}
+.chip:hover{transform:translateY(-2px)}
+.chip.on{background:var(--ink);color:var(--paper)} .chip.on .s{color:#d9ccb4}
+#kwPanel{margin-top:18px;scroll-margin-top:16px}
+.kwhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:16px}
+.kwclose{font:inherit;font-size:13px;font-weight:700;background:none;border:2px solid var(--ink);border-radius:999px;padding:3px 12px;cursor:pointer}
+.kwcard{background:var(--card);border:2px solid var(--ink);border-left-width:8px;border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.kwmeta{font-size:13px;color:var(--sub);margin-bottom:6px} .kwmeta b{color:var(--ink)}
+.kwev{font-size:14.5px;white-space:pre-wrap}
+.kwev mark{background:#ffd9a8;padding:0 2px;border-radius:3px}
+.kwfoot{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.kwfoot img{width:52px;height:52px;object-fit:cover;border-radius:6px;border:2px solid var(--ink);cursor:pointer}
+.kwgo{margin-left:auto;font:inherit;font-size:13px;font-weight:900;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
 .tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:7px 10px;border-radius:8px;max-width:260px;opacity:0;transition:opacity .1s;z-index:9}
 .note{font-size:12px;color:var(--sub);margin-top:40px;border-top:1px dashed var(--line);padding-top:12px}
 @media (max-width:860px){
@@ -867,8 +880,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </div>
 
 <h2><span class="no">8</span>「できごと」欄の頻出ワード</h2>
-<p class="lead">各日の「できごと」に出てきた日数。この旅の正体が見えてきます。</p>
+<p class="lead">各日の「できごと」に出てきた日数。この旅の正体が見えてきます。ワードを押すと、その日の日記が読めます。</p>
 <div class="chips" id="chips"></div>
+<div id="kwPanel"></div>
 
 <p class="note">
 集計元：添付Excel「元データ」シート（歩行距離・歩数・上った階数はiPhoneヘルスケアの値）。前泊だけの3日は日数から除いています。<br>
@@ -1173,7 +1187,30 @@ document.getElementById('gacha').addEventListener('click',()=>{
 (function(){
   const ico={"一献":"🍺","峠":"⛰️","苦しめ":"😩","断念/スルー":"🙅","雨":"☔","タクシー":"🚕","暑":"🥵","スパ銭":"♨️","クマ":"🐻","脚痛":"🦵","マッサージ":"💆","閉口":"😶","カレー":"🍛","ラーメン":"🍜","うなぎ":"🐟"};
   const lab={"一献":"一献・乾杯","苦しめ":"苦しめられる","暑":"暑さ","クマ":"獣と遭遇","断念/スルー":"断念・スルー","スパ銭":"スパ銭・湯"};
-  document.getElementById('chips').innerHTML=Object.entries(DATA.kw).map(([k,v])=>`<div class="chip"><div style="font-size:26px">${ico[k]||'•'}</div><div class="w">${lab[k]||k}</div><div class="c">${v}<small> 日</small></div><div class="s">${(v/days.length*100).toFixed(0)}%</div></div>`).join('');
+  const RX={"一献":"一献|乾杯|祝杯|打ち上げ|前夜祭|宅飲み","峠":"峠","苦しめ":"苦しめ|苦しむ|苦労|しんど","断念/スルー":"断念|スルー|パス","雨":"雨","タクシー":"タクシー","暑":"暑","スパ銭":"スパ銭|湯風景|の湯|立ち寄り湯","クマ":"クマ|獣|猪|マムシ|猿","脚痛":"脚痛|脚が痛","マッサージ":"マッサージ","閉口":"閉口","カレー":"カレー","ラーメン":"ラーメン","うなぎ":"うなぎ|鰻"};
+  const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const box=document.getElementById('chips'),panel=document.getElementById('kwPanel');
+  box.innerHTML=Object.entries(DATA.kw).map(([k,v])=>`<button class="chip" data-k="${k}"><div style="font-size:26px">${ico[k]||'•'}</div><div class="w">${lab[k]||k}</div><div class="c">${v}<small> 日</small></div><div class="s">${(v/days.length*100).toFixed(0)}%</div></button>`).join('');
+  let cur=null;
+  box.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k;
+    if(cur===k){cur=null;b.classList.remove('on');panel.innerHTML='';return}
+    cur=k;box.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));
+    const re=new RegExp(RX[k],'g');
+    const hits=days.map((d,i)=>({d,i})).filter(o=>new RegExp(RX[k]).test(o.d.ev));
+    const ph=d=>(typeof PHOTOS!=='undefined'?PHOTOS.filter(p=>p.day===d.d):[]);
+    panel.innerHTML=`<div class="kwhead"><b>${ico[k]||''} 「${lab[k]||k}」が出てくる日（${hits.length}日）</b><button class="kwclose">閉じる ×</button></div>`+
+      hits.map(({d,i})=>{const ps=ph(d);const n=(d.ev.match(re)||[]).length;
+        return `<div class="kwcard" style="border-left-color:${K[d.kaido].hex}">
+          <div class="kwmeta"><span style="color:${K[d.kaido].hex}">●</span> ${ymd(d.d)}（通算${i+1}日目）　<b>${d.fr} → ${d.to}</b>　${d.km}km${n>1?`　<span class="tag">×${n}回</span>`:''}</div>
+          <div class="kwev">${esc(d.ev).replace(re,m=>`<mark>${m}</mark>`)}</div>
+          <div class="kwfoot">${ps.slice(0,5).map((p,j)=>`<img src="${TS(p.id)}" data-day="${d.d}" data-j="${j}" alt="">`).join('')}${ps.length>5?`<span class="tag">📷 ほか${ps.length-5}枚</span>`:''}
+          <button class="kwgo" data-i="${i}">ガチャで見る →</button></div></div>`}).join('');
+    panel.querySelector('.kwclose').onclick=()=>b.click();
+    panel.querySelectorAll('.kwgo').forEach(g=>g.onclick=()=>{pick(+g.dataset.i);document.getElementById('bars').scrollIntoView({behavior:'smooth',block:'center'})});
+    panel.querySelectorAll('.kwfoot img').forEach(im=>im.onclick=()=>{const list=PHOTOS.filter(p=>p.day===im.dataset.day);window.openLB&&openLB(list,+im.dataset.j)});
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  });
 })();
 </script>
 </body>
