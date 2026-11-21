@@ -104,6 +104,13 @@ svg text{font-family:"Zen Maru Gothic",sans-serif}
 .kwfoot{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
 .kwfoot img{width:52px;height:52px;object-fit:cover;border-radius:6px;border:2px solid var(--ink);cursor:pointer}
 .kwgo{margin-left:auto;font:inherit;font-size:13px;font-weight:900;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+#map.big{position:fixed!important;top:0;left:0;right:0;bottom:0;height:100vh!important;width:100vw!important;z-index:40;border-radius:0;border:0}
+.mapbtn{background:#fff;border:2px solid rgba(0,0,0,.2);border-radius:4px;padding:5px 9px;font:700 13px "Zen Maru Gothic",sans-serif;cursor:pointer;color:#2b2420}
+.mapbtn:hover{background:#f4f4f4}
+.gbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:6px}
+.gbar .legend{margin:0}
+#dThumbs{min-height:68px}
+.dayinfo h4{min-height:1.6em}
 .tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12.5px;padding:7px 10px;border-radius:8px;max-width:260px;opacity:0;transition:opacity .1s;z-index:9}
 .note{font-size:12px;color:var(--sub);margin-top:40px;border-top:1px dashed var(--line);padding-top:12px}
 @media (max-width:860px){
@@ -835,7 +842,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <h2><span class="no">3</span>全60日 ふりかえりガチャ</h2>
 <p class="lead">棒1本が1日分。棒をクリックするか、ガチャを回すとその日の「できごと」が出てきます。</p>
 <div class="card">
-  <div class="legend" id="legend"></div>
+  <div class="gbar"><button class="btn" id="gacha">🎰 ガチャを回す</button><div class="legend" id="legend"></div></div>
   <svg id="bars" viewBox="0 0 1000 280" width="100%"></svg>
   <div class="daybox">
     <div class="dayinfo">
@@ -844,14 +851,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div class="nums" id="dNums"></div>
       <div id="dComp"></div>
       <div class="thumbrow" id="dThumbs"></div>
-      <div style="margin-top:14px"><button class="btn" id="gacha">🎰 ガチャを回す</button></div>
     </div>
     <div class="ev" id="dEv"></div>
   </div>
 </div>
 
 <h2><span class="no">4</span>写真マップ</h2>
-<p class="lead">撮影場所に写真を並べた地図です。点にマウスを乗せると写真、クリックで拡大。白抜きの点は撮影時刻から推定した位置です。ルートから大きく離れた場所（移動中など）の写真は地図に出していません。</p>
+<p class="lead">撮影場所に写真を並べた地図です。点にマウスを乗せると写真、クリックで拡大。地図右上の「⛶ 拡大」で全画面表示にできます。白抜きの点は撮影時刻から推定した位置です。ルートから大きく離れた場所（移動中など）の写真は地図に出していません。</p>
 <div class="daychips" id="daychips"></div>
 <div class="mapwrap">
   <div><div id="map"></div><div class="legend2">●=位置情報あり　○=時刻から推定　線=その日の歩いた順</div></div>
@@ -1022,7 +1028,7 @@ function pick(i,final=true){
   if(window.onDay)window.onDay(d,final);
 }
 document.getElementById('gacha').addEventListener('click',()=>{
-  let n=0;const spin=()=>{const last=++n>=14;pick(Math.floor(Math.random()*days.length),last);if(!last)setTimeout(spin,40+n*14);else document.getElementById('bars').scrollIntoView({behavior:'smooth',block:'center'})};spin();
+  let n=0;const spin=()=>{const last=++n>=14;pick(Math.floor(Math.random()*days.length),last);if(!last)setTimeout(spin,40+n*14)};spin();
 });
 
 /* --- photo map --- */
@@ -1054,6 +1060,18 @@ document.getElementById('gacha').addEventListener('click',()=>{
   if(allB.isValid())map.fitBounds(allB.pad(.15));else map.setView([36.2,138.5],6);
   L.geoJSON(JAPAN,{style:{color:"#b9a98e",weight:1,fillColor:"#f3ead8",fillOpacity:1},interactive:false}).addTo(map);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+
+  // expand control
+  const Big=L.Control.extend({options:{position:'topright'},onAdd(){const b=L.DomUtil.create('button','mapbtn');b.type='button';b.textContent='⛶ 拡大';
+    L.DomEvent.disableClickPropagation(b);b.onclick=()=>toggleBig();this._b=b;return b}});
+  const bigCtl=new Big().addTo(map);
+  function toggleBig(force){const el=document.getElementById('map');const on=force===undefined?!el.classList.contains('big'):force;
+    const c=map.getCenter(),z=map.getZoom();
+    el.classList.toggle('big',on);document.body.style.overflow=on?'hidden':'';
+    bigCtl._b.textContent=on?'✕ 閉じる':'⛶ 拡大';
+    on?map.scrollWheelZoom.enable():map.scrollWheelZoom.disable();
+    setTimeout(()=>{map.invalidateSize();map.setView(c,z,{animate:false})},60)}
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('lb').classList.contains('on')&&document.getElementById('map').classList.contains('big'))toggleBig(false)});
   const markers={},lines=[];
   photoDays.forEach(dd=>{
     const pts=byDay[dd].filter(p=>p.lat&&!p.est&&p.ts).sort((a,b)=>a.ts<b.ts?-1:1);
